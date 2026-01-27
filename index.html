@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RU ⇄ VI Переводчик | TourVietnam</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg,#0f2027,#203a43,#2c5364);
+  color:#ffffff;
+}
+.container {
+  padding:15px;
+  max-width:500px;
+  margin:auto;
+}
+h2 {
+  text-align:center;
+  color:#a8ff60;
+  margin-bottom:10px;
+}
+.card {
+  background:#1c1c1c;
+  border-radius:16px;
+  padding:15px;
+  margin-bottom:15px;
+}
+textarea, select, button {
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  font-size:16px;
+  border-radius:12px;
+  border:none;
+}
+textarea {
+  background:#2a2a2a;
+  color:#fff;
+}
+button {
+  background:#a8ff60;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.mic {
+  background:#ff5f5f;
+  color:#fff;
+}
+.links a {
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:#2a2a2a;
+  color:#a8ff60;
+  font-weight:bold;
+}
+.note {
+  text-align:center;
+  font-size:13px;
+  color:#ccc;
+  margin-top:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🇷🇺 ⇄ 🇻🇳 Переводчик</h2>
+
+<!-- ПЕРЕВОДЧИК -->
+<div class="card">
+
+<select id="mode">
+  <option value="auto">Авто</option>
+  <option value="ru">Русский → Вьетнамский</option>
+  <option value="vi">Вьетнамский → Русский</option>
+</select>
+
+<textarea id="input" placeholder="Введите текст или используйте голос"></textarea>
+
+<button class="mic" onclick="startVoiceRU()">🎤 Русский</button>
+<button class="mic" onclick="startVoiceVI()">🎤 Tiếng Việt</button>
+
+<button onclick="translateText()">🌍 Перевести</button>
+
+<div class="note">
+Перевод откроется в этом же окне через Google Translate<br>
+Работает в Chrome • Разрешите доступ к микрофону
+</div>
+
+</div>
+
+<!-- ССЫЛКИ -->
+<div class="card links">
+<a href="https://tourvietnam.org" target="_blank">🌐 Официальный сайт</a>
+<a href="https://wa.me/84342134941" target="_blank">💬 WhatsApp</a>
+<a href="https://profile.imo.im/profileshare/shr.AAAAAAAAAAAAAAAAAAAAAFiJL-6MyRr8GsDI0PXbYHNlF4CfyLALlgfabh6pKqOA" target="_blank">💬 imo</a>
+<a href="https://t.me/TourVietnam_bot" target="_blank">🤖 Telegram-бот</a>
+<a href="https://t.me/turvyetnam" target="_blank">📣 Telegram-канал</a>
+<a href="tel:+84342134941">📞 Позвонить</a>
+</div>
+
+</div>
+
+<script>
+const input = document.getElementById("input");
+
+function translateText(){
+  const text = input.value.trim();
+  if(!text){
+    alert("Введите текст или используйте голосовой ввод");
+    return;
+  }
+
+  const mode = document.getElementById("mode").value;
+  let tl = "vi";
+
+  if(mode === "vi") tl = "ru";
+  if(mode === "ru") tl = "vi";
+  if(mode === "auto") tl = /[а-яА-Я]/.test(text) ? "vi" : "ru";
+
+  const url =
+    "https://translate.google.com/?sl=auto&tl=" + tl +
+    "&text=" + encodeURIComponent(text) +
+    "&op=translate";
+
+  // безопасный переход (GitHub Pages не блокирует)
+  window.location.href = url;
+}
+
+function startVoiceRU(){ startVoice("ru-RU"); }
+function startVoiceVI(){ startVoice("vi-VN"); }
+
+function startVoice(lang){
+  if(!window.webkitSpeechRecognition){
+    alert("Голосовой ввод поддерживается только в Chrome");
+    return;
+  }
+  const rec = new webkitSpeechRecognition();
+  rec.lang = lang;
+  rec.onresult = e=>{
+    input.value = e.results[0][0].transcript;
+  };
+  rec.start();
+}
+</script>
+
+</body>
+</html>
